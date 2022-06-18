@@ -14,13 +14,13 @@ public class Generator {
     int number = 0;
 
     Scanner input = new Scanner(inputMath);
-    output = nextOpertion(input, number);
+    output = nextOpertion(input, number, 0);
     number++;
 
     return output;
   }
 
-  private static Function<? super Float, ? extends Float> nextOpertion(Scanner input, int number){
+  private static Function<? super Float, ? extends Float> nextOpertion(Scanner input, int number, int subnumber){
     
     Function<? super Float, ? extends Float> output;
     
@@ -34,28 +34,29 @@ public class Generator {
               if(input.hasNextFloat()){
                 Float temper = input.nextFloat();
                 Function <? super Float, ? extends Float> after = ttx -> ttx / temper; 
-                output.andThen(after);
+                output = output.andThen(after);
               }
             break;
             case "*":
               if(input.hasNextFloat()){
                 Float temper = input.nextFloat();
                 Function <? super Float, ? extends Float> after = ttx -> ttx * temper; 
-                output.andThen(after);
+                output = output.andThen(after);
               }
             break;
             case "-":
               if(input.hasNextFloat()){
                 Float temper = input.nextFloat();
                 Function <? super Float, ? extends Float> after = ttx -> ttx - temper; 
-                output.andThen(after);
+                after = after.andThen(nextOpertion(input, number, subnumber+1));
+                output = output.andThen(after);
               }
             break;
             case "+":
               if(input.hasNextFloat()){
                 Float temper = input.nextFloat();
                 Function <? super Float, ? extends Float> after = ttx -> ttx + temper; 
-                output.andThen(after);
+                output = output.andThen(after);
               }
             break;
             case "Sin":
@@ -126,15 +127,16 @@ public class Generator {
               if(input.hasNextFloat()){
                 Float temper = input.nextFloat();
                 Function <? super Float, ? extends Float> after = ttx -> (float) Math.pow(ttx, temper); 
-                output.andThen(after);
+                output = output.andThen(after);
               }
             break;
           }
         }
     }else{
-      System.out.println("an operation error has occured, funktion" + number + "did not start with a float");
+      System.out.println("an operation error has occured, funktion " + number + "." + subnumber + " did not start with a float");
       output = x -> -124f;
     }
+
     return output;
   }
 }
