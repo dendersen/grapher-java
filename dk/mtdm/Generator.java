@@ -6,7 +6,8 @@ import java.util.regex.Pattern;
 
 public class Generator {
   
-  static final Pattern activeOperations = Pattern.compile("[/|*|-|+|Sin|sin|Cos|cos|tan|Tan|Sqrt|sqrt|^]");
+  static final Pattern activeSimpleOperations = Pattern.compile("[/|*|-|+]");
+  static final Pattern activeComplexOperations = Pattern.compile("Sin|sin|Cos|cos|tan|Tan|Sqrt|sqrt|^");
 
   public static Function<? super Float, ? extends Float> translate(String inputMath){
     Function<? super Float, ? extends Float> output = x -> 1f;
@@ -14,130 +15,95 @@ public class Generator {
     int number = 0;
 
     Scanner input = new Scanner(inputMath);
-    output = nextOpertion(input, number, 0);
+    output = nextFullOperation(input, number, 0);
     number++;
 
     return output;
   }
 
-  private static Function<? super Float, ? extends Float> nextOpertion(Scanner input, int number, int subnumber){
+  private static Function<? super Float, ? extends Float> nextFullOperation(Scanner input, int number, int subnumber){
     
     Function<? super Float, ? extends Float> output;
+    Function<? super Float, ? extends QuadStore> translator;
+    Function<? super QuadStore, ? extends Float> reverter;
     
-    if(input.hasNextFloat()){
-      Float temp = input.nextFloat();
-      output = x -> temp;
-        while(input.hasNext()){
-          String Temp = input.next();
-          switch(Temp){
-            case "/":
-              if(input.hasNextFloat()){
-                Float temper = input.nextFloat();
-                Function <? super Float, ? extends Float> after = ttx -> ttx / temper; 
-                output = output.andThen(after);
-              }
-            break;
-            case "*":
-              if(input.hasNextFloat()){
-                Float temper = input.nextFloat();
-                Function <? super Float, ? extends Float> after = ttx -> ttx * temper; 
-                output = output.andThen(after);
-              }
-            break;
-            case "-":
-              if(input.hasNextFloat()){
-                Float temper = input.nextFloat();
-                Function <? super Float, ? extends Float> after = ttx -> ttx - temper; 
-                after = after.andThen(nextOpertion(input, number, subnumber+1));
-                output = output.andThen(after);
-              }
-            break;
-            case "+":
-              if(input.hasNextFloat()){
-                Float temper = input.nextFloat();
-                Function <? super Float, ? extends Float> after = ttx -> ttx + temper; 
-                output = output.andThen(after);
-              }
-            break;
-            case "Sin":
-              // if(input.hasNextFloat()){
-              //   Float temper = input.nextFloat();
-              //   Function <? super Float, ? extends Float> after = ttx -> ttx sin temper; 
-              //   output.andThen(after);
-              // }
-              System.out.println(Temp + "has yet to ble implimented and will be skiped");
-            break;
-            case "sin":
-              // if(input.hasNextFloat()){
-              //   Float temper = input.nextFloat();
-              //   Function <? super Float, ? extends Float> after = ttx -> ttx / temper; 
-              //   output.andThen(after);
-              // }
-              System.out.println(Temp + "has yet to ble implimented and will be skiped");
-            break;
-            case "Cos":
-              // if(input.hasNextFloat()){
-              //   Float temper = input.nextFloat();
-              //   Function <? super Float, ? extends Float> after = ttx -> ttx / temper; 
-              //   output.andThen(after);
-              // }
-              System.out.println(Temp + "has yet to ble implimented and will be skiped");
-            break;
-            case "cos":
-              // if(input.hasNextFloat()){
-              //   Float temper = input.nextFloat();
-              //   Function <? super Float, ? extends Float> after = ttx -> ttx / temper; 
-              //   output.andThen(after);
-              // }
-              System.out.println(Temp + "has yet to ble implimented and will be skiped");
-            break;
-            case "tan":
-              // if(input.hasNextFloat()){
-              //   Float temper = input.nextFloat();
-              //   Function <? super Float, ? extends Float> after = ttx -> ttx / temper; 
-              //   output.andThen(after);
-              // }
-              System.out.println(Temp + "has yet to ble implimented and will be skiped");
-            break;
-            case "Tan":
-              // if(input.hasNextFloat()){
-              //   Float temper = input.nextFloat();
-              //   Function <? super Float, ? extends Float> after = ttx -> ttx / temper; 
-              //   output.andThen(after);
-              // }
-              System.out.println(Temp + "has yet to ble implimented and will be skiped");
-            break;
-            case "Sqrt":
-              // if(input.hasNextFloat()){
-              //   Float temper = input.nextFloat();
-              //   Function <? super Float, ? extends Float> after = ttx -> ttx / temper; 
-              //   output.andThen(after);
-              // }
-              System.out.println(Temp + "has yet to ble implimented and will be skiped");
-            break;
-            case "sqrt":
-              // if(input.hasNextFloat()){
-              //   Float temper = input.nextFloat();
-              //   Function <? super Float, ? extends Float> after = ttx -> ttx / temper; 
-              //   output.andThen(after);
-              // }
-              System.out.println(Temp + "has yet to ble implimented and will be skiped");
-            break;
-            case "^":
-              if(input.hasNextFloat()){
-                Float temper = input.nextFloat();
-                Function <? super Float, ? extends Float> after = ttx -> (float) Math.pow(ttx, temper); 
-                output = output.andThen(after);
-              }
-            break;
-          }
-        }
-    }else{
-      System.out.println("an operation error has occured, funktion " + number + "." + subnumber + " did not start with a float");
-      output = x -> -124f;
+    translator = xt -> new QuadStore().setX(xt);
+    
+    reverter = xt -> xt.y;
+    while(input.hasNext()){
+      Function<? super QuadStore, ? extends QuadStore> temp = nextSimpleOperation(input);
+      translator = translator.andThen(temp);
     }
-
+    Function<? super Float, ? extends QuadStore> home = translator;
+    output = xt -> reverter.apply(home.apply(xt));
     return output;
+  }
+  
+  private static Function<? super QuadStore, ? extends QuadStore> nextSimpleOperation(Scanner input) {
+    Function<? super QuadStore, ? extends QuadStore> temp;
+    switch (Reader(input)) {
+    case "/":
+      temp = xt -> xt;
+    break;
+
+    case "*":
+      temp = xt -> xt;
+    break;
+
+    case "-":
+      temp = xt -> xt;
+    break;
+
+    case "+":
+      temp = xt -> xt;
+    break;
+
+    case "Sin":
+      temp = xt -> xt;
+    break;
+
+    case "sin":
+      temp = xt -> xt;
+    break;
+
+    case "Cos":
+      temp = xt -> xt;
+    break;
+
+    case "cos":
+      temp = xt -> xt;
+    break;
+
+    case "tan":
+      temp = xt -> xt;
+    break;
+
+    case "Tan":
+      temp = xt -> xt;
+    break;
+
+    case "Sqrt":
+      temp = xt -> xt;
+    break;
+
+    case "sqrt":
+      temp = xt -> xt;
+    break;
+
+    case "^":
+      temp = xt -> xt;
+    break;
+  }
+
+    temp = xt -> xt;
+    return temp;
+  }
+
+  static private String Reader(Scanner input){
+    if(input.hasNext()){
+
+    }
+    return "";
   }
 }
 
