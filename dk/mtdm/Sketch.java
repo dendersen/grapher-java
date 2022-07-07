@@ -1,10 +1,13 @@
 package dk.mtdm;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.function.Function;
 
+
+import dk.mtdm.translator.Generator;
 import processing.core.PApplet;
 
 public class Sketch extends PApplet{
@@ -120,13 +123,14 @@ public class Sketch extends PApplet{
   //   lines.add(calc6);
   }
   
+  //TODO Needs to go in uttils class
   private static void loadTxtFile(){
     File file = new File("mathematical lines.txt");
     try (Scanner input = new Scanner(file)) {
       while (input.hasNextLine()){
-        lines.add(
-          Generator.translate(input.nextLine())
-        );
+        Generator Liner = new Generator(input.nextLine());
+        Function<Float,Float> calc = Liner.Result();
+        lines.add(calc);
       }
     } catch (FileNotFoundException e) {
       e.printStackTrace();
