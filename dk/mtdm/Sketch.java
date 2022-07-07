@@ -128,9 +128,12 @@ public class Sketch extends PApplet{
     File file = new File("mathematical lines.txt");
     try (Scanner input = new Scanner(file)) {
       while (input.hasNextLine()){
-        Generator Liner = new Generator(input.nextLine());
-        Function<Float,Float> calc = Liner.Result();
-        lines.add(calc);
+        String string = input.nextLine();
+        if(string != ""){
+          Generator Liner = new Generator(string);
+          Function<Float,Float> calc = Liner.Result();
+          lines.add(calc);
+        }
       }
     } catch (FileNotFoundException e) {
       e.printStackTrace();
