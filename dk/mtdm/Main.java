@@ -11,6 +11,4 @@ public class Main {
     Sketch draw = new Sketch();
     PApplet.runSketch(processingArgs,draw);
   }
-
-
 }

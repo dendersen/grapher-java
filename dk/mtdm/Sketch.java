@@ -1,13 +1,13 @@
 package dk.mtdm;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.function.Function;
 
-
-import dk.mtdm.translator.Generator;
+import dk.mtdm.dataTypes.Point;
+import dk.mtdm.translator.GeneratorV2;
+import net.objecthunter.exp4j.Expression;
 import processing.core.PApplet;
 
 public class Sketch extends PApplet{
@@ -16,11 +16,11 @@ public class Sketch extends PApplet{
   public static ArrayList <FunktionRunner> calculators = new ArrayList<FunktionRunner>();
   private static float[][] colorCodes;
 
-  public static int height = 1000;
+  public static int height = 500;
   public static int width = 1000;
   
-  final private float DensityStart = 0.1f;
-  final private int NumberOfThreads = 10;
+  final private float DensityStart = 0.2f;
+  final private int NumberOfThreads = 20;
   final private Function<? super Float, ? extends Float> DensityRamp = x ->x * 1.03f;
 
   float frameCheck = 100;
@@ -82,7 +82,7 @@ public class Sketch extends PApplet{
       System.out.println("programe finished, awaiting closeing");
       return;
     }
-    if(frameCheck < 15){
+    if(frameCheck < 5){
       frameRate(0.1f);
       System.out.println("stopping" + frameRate);
       return;
@@ -103,24 +103,6 @@ public class Sketch extends PApplet{
   }
 
   private static void loadPreMade(){
-
-    Function<? super Float, ? extends Float> calc1  = x->sin(x/50)*400;
-    lines.add(calc1);
-
-    Function<? super Float, ? extends Float> calc2  = x->tan(x/50)*400;
-    lines.add(calc2);
-
-    Function<? super Float, ? extends Float> calc3  = x->cos(x/50)*400;
-    lines.add(calc3);
-
-  //   Function<? super Float, ? extends Float> calc4  = x->asin(x/50)*400;
-  //   lines.add(calc4);
-
-  //   Function<? super Float, ? extends Float> calc5  = x->atan(x/50)*400;
-  //   lines.add(calc5);
-
-  //   Function<? super Float, ? extends Float> calc6  = x->acos(x/50)*400;
-  //   lines.add(calc6);
   }
   
   //TODO Needs to go in uttils class
@@ -130,12 +112,12 @@ public class Sketch extends PApplet{
       while (input.hasNextLine()){
         String string = input.nextLine();
         if(string != ""){
-          Generator Liner = new Generator(string);
-          Function<Float,Float> calc = Liner.Result();
+          Expression call = GeneratorV2.gen(string);
+          Function<? super Float, ? extends Float> calc = x-> (float) call.setVariable("x", x).evaluate();
           lines.add(calc);
-        }
+          };
       }
-    } catch (FileNotFoundException e) {
+    }catch(FileNotFoundException e) {
       e.printStackTrace();
     }
   }
@@ -171,5 +153,4 @@ public class Sketch extends PApplet{
 
     return (new float[] {r,g,b});
   }
-
 }

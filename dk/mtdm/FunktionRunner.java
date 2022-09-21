@@ -3,6 +3,8 @@ package dk.mtdm;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 
+import dk.mtdm.dataTypes.Point;
+
 public class FunktionRunner implements Runnable{
   
   private String threadName;

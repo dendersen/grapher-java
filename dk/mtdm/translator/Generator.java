@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
-import dk.mtdm.QuadStore;
+import dk.mtdm.dataTypes.QuadStore;
 
 /*TODO
  * what does "action do"
