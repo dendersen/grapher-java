@@ -1,6 +1,11 @@
 {
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "c:\\Users\\dende\\Downloads\\processing-4.0b8-windows-x64\\processing-4.0b8\\core\\library\\core.jar"
+        "c:\\Users\\dende\\Downloads\\processing-4.0b8-windows-x64\\processing-4.0b8\\core\\library\\core.jar",
+        "c:\\Users\\user\\Downloads\\core (1).jar",
+        "exp4j-0.4.8.jar",
+        "c:\\Users\\user\\Downloads\\core.jar",
+        "libraries/core.jar",
+        "libraries/exp4j-0.4.8.jar"
     ]
 }

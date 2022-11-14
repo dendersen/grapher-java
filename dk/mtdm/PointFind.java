@@ -2,6 +2,8 @@ package dk.mtdm;
 
 import java.util.ArrayList;
 
+import dk.mtdm.dataTypes.Point;
+
 public class PointFind {
   public static ArrayList <Point> points = new ArrayList<Point>(); 
   

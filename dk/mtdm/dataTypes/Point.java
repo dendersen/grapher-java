@@ -1,4 +1,4 @@
-package dk.mtdm;
+package dk.mtdm.dataTypes;
 
 public class Point {
   public final Float x;

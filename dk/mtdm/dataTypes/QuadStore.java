@@ -1,4 +1,4 @@
-package dk.mtdm;
+package dk.mtdm.dataTypes;
 
 import java.util.ArrayList;
 
