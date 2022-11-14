@@ -80,7 +80,6 @@ public class Generator extends Finder{
       }
       
     }
-    
     return line;
   }
   /**

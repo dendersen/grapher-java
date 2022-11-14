@@ -1,7 +1,6 @@
 package dk.mtdm;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.function.Function;
